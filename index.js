@@ -69,14 +69,22 @@ server.route({
           response.on("end", data => {
             console.log("Done whether the image has been created or not")
             if (valid) {
+              let number = Math.floor(Math.random() * (6000 - 3000) + 3000)
               docker
                 .createContainer({
                   Image: appName,
                   Tty: false,
-                  PortBindings: { "3000/tcp": [{ HostPort: "3001" }] },
+                  PortBindings: {
+                    "8080/tcp": [
+                      {
+                        HostPort: number.toString(),
+                      },
+                    ],
+                  },
                 })
                 .then(container => {
                   container.start()
+                  console.log("Container started and is listening on " + number)
                 })
             }
           })
